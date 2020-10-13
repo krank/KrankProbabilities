@@ -47,8 +47,8 @@ namespace KrankProbabilities
 
     public static Result Contest(int numDiceA, int numDiceB, Random generator)
     {
-      (int successes, int[] results) resultA = DieRoll(numDiceA, generator);
-      (int successes, int[] results) resultB = DieRoll(numDiceB, generator);
+      (int successes, List<int> results) resultA = DieRoll(numDiceA, generator);
+      (int successes, List<int> results) resultB = DieRoll(numDiceB, generator);
 
       // Console.WriteLine("A results: " + String.Join(",", resultA.results));
       // Console.WriteLine("B results: " + String.Join(",", resultB.results));
@@ -94,7 +94,7 @@ namespace KrankProbabilities
 
       for (int i = 0; i < numRolls; i++)
       {
-        (int successes, int[] results) dieRollResults = DieRoll(numDice, generator);
+        (int successes, List<int> results) dieRollResults = DieRoll(numDice, generator);
 
         numSuccessful += dieRollResults.successes > 0 ? 1 : 0;
 
@@ -103,12 +103,14 @@ namespace KrankProbabilities
       return numSuccessful;
     }
 
-    public static (int, int[]) DieRoll(int numDice)
+
+    // TODO: Test speed if using List<int> instead of int[] as return value
+    public static (int, List<int>) DieRoll(int numDice)
     {
       return DieRoll(numDice, generator);
     }
 
-    public static (int, int[]) DieRoll(int numOfDice, Random generator)
+    public static (int, List<int>) DieRoll(int numOfDice, Random generator)
     {
 
       List<int> results = new List<int>();
@@ -149,7 +151,7 @@ namespace KrankProbabilities
 
       }
 
-      return (successes, results.ToArray());
+      return (successes, results);
     }
   }
 }

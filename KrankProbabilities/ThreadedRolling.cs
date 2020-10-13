@@ -48,9 +48,7 @@ namespace KrankProbabilities
 
     public static void ContestRollsAction()
     {
-      int yOffset = 0;
-      int.TryParse(Thread.CurrentThread.Name, out yOffset);
-
+      Random generator = new Random();
       int[] batches = new int[20];
 
       for (int i = 0; i < batches.Length; i++)
@@ -69,6 +67,7 @@ namespace KrankProbabilities
       // Do 1 batch at a time, update
 
       Dictionary<Krank.Result, int> results = new Dictionary<Krank.Result, int>();
+
       results.Add(Krank.Result.win, 0);
       results.Add(Krank.Result.lose, 0);
       results.Add(Krank.Result.draw, 0);
@@ -81,7 +80,7 @@ namespace KrankProbabilities
 
         int batchSize = batches[i];
         
-        Dictionary<Krank.Result, int> batchResults = Krank.ManyContests(batchSize, numDice, numDiceB, new Random());
+        Dictionary<Krank.Result, int> batchResults = Krank.ManyContests(batchSize, numDice, numDiceB, generator);
 
         foreach (Krank.Result key in batchResults.Keys)
         {
@@ -130,7 +129,7 @@ namespace KrankProbabilities
 
       foreach (Thread t in threads) t.Start();
 
-      // Wait for all threads to finish before continuing"
+      // Wait for all threads to finish before continuing
       foreach (Thread t in threads) t.Join();
 
       DateTime after = DateTime.Now;

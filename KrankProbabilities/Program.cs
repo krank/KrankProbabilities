@@ -16,15 +16,18 @@ namespace KrankProbabilities
 
       // Setup
       ThreadedRolling.numRollsPerThread = 100000000; // per thread
-      ThreadedRolling.numDice = 1;
-      ThreadedRolling.numDiceB = 2;
+      ThreadedRolling.numDice = 5;
+      ThreadedRolling.numDiceB = 5;
       ThreadedRolling.numThreads = 16;
-
       Krank.useChaosDie = true;
 
-      int numContests = ThreadedRolling.numRollsPerThread * ThreadedRolling.numThreads;
+      string csvFilename = @"data.csv";
 
+      // Do the rollin'
       Dictionary<Krank.Result, int> results = ThreadedRolling.ContestRolls();
+
+      // Show results
+      int numContests = ThreadedRolling.numRollsPerThread * ThreadedRolling.numThreads;
 
       Console.WriteLine($"\nA: {ThreadedRolling.numDice} B: {ThreadedRolling.numDiceB}");
 
@@ -36,16 +39,23 @@ namespace KrankProbabilities
 
       Console.WriteLine(ThreadedRolling.delta);
 
-      string line = String.Join(';', new double[]{
+      // Save results into csv file
+      string line = String.Join(',', new double[]{
         ThreadedRolling.numDice,
         ThreadedRolling.numDiceB,
+        numContests,
         results[Krank.Result.win],
         results[Krank.Result.lose],
         results[Krank.Result.draw],
         results[Krank.Result.nowin],
         });
 
-      File.AppendAllText(@"test.csv", line + "\n");
+      if (!File.Exists(csvFilename))
+      {
+        File.WriteAllText(csvFilename, "A-DICE,B-DICE,SIMULATED CONTESTS,A-WINS,A-LOSSES,DRAWS,NOWINS");
+      }
+
+      File.AppendAllText(csvFilename, "\n" + line);
 
 
       /*
